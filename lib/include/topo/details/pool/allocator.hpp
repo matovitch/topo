@@ -4,9 +4,10 @@
 #include "topo/details/buffer/stack.hpp"
 #include "topo/details/buffer/heap.hpp"
 
+#include "topo/details/stack/stack.hpp"
+
 #include <cstdint>
 #include <memory>
-#include <vector>
 
 namespace topo_details
 {
@@ -23,6 +24,9 @@ class TAllocator
 
     static constexpr std::size_t SIZE = Traits::SIZE;
 
+    template <class Type>
+    using TStack = typename Traits::template TStack<Type>;
+
 public:
 
     using Type = typename Traits::Type;
@@ -36,36 +40,34 @@ public:
     {
         if (!_recycleds.empty())
         {
-            Type* const ptr = _recycleds.back();
-            _recycleds.pop_back();
+            Type* const ptr = _recycleds.top();
+            _recycleds.pop();
             ptr->~Type();
             return ptr;
         }
 
-        Type* const ptr = _bufferPtr->allocate();
-
-        if (!ptr)
+        if (Type* const ptr = _bufferPtr->allocate())
         {
-            _heapBuffers.emplace_back(std::make_unique<HeapBuffer>(_size <<= 1));
-            _bufferPtr = _heapBuffers.back().get();
-
-            return _heapBuffers.back()->allocate();
+            return ptr;
         }
 
-        return ptr;
+        _heapBuffers.push(_size <<= 1);
+        _bufferPtr = &(_heapBuffers.top());
+
+        return _bufferPtr->allocate();
     }
 
     void recycle(Type* ptr)
     {
-        _recycleds.emplace_back(ptr);
+        _recycleds.push(ptr);
     }
 
 private:
 
-    AbstractBuffer*                          _bufferPtr;
-    StackBuffer                              _stackBuffer;
-    std::vector<Type*>                       _recycleds;
-    std::vector<std::unique_ptr<HeapBuffer>> _heapBuffers;
+    AbstractBuffer*    _bufferPtr;
+    StackBuffer        _stackBuffer;
+    TStack<Type*>      _recycleds;
+    TStack<HeapBuffer> _heapBuffers;
 
     std::size_t _size;
 };
@@ -83,6 +85,9 @@ struct TTraits
     using    StackBuffer = buffer::stack ::TMake <Type, SIZE>;
     using     HeapBuffer = buffer::heap  ::TMake <Type>;
     using AbstractBuffer = buffer::TAbstract     <Type>;
+
+    template <class Type>
+    using TStack = stack::TMake<Type, SIZE>;
 };
 
 template <class Type, std::size_t SIZE>

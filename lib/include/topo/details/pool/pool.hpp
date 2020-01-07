@@ -16,7 +16,7 @@ public:
     template <class... Args>
     Type& make(Args&&... args)
     {
-        return *(new(static_cast<void *>(_allocator.allocate())) Type(std::forward<Args>(args)...));
+        return *(new (static_cast<void *>(_allocator.allocate())) Type(std::forward<Args>(args)...));
     }
 
     void recycle(Type& value)
