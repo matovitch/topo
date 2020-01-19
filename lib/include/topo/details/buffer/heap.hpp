@@ -20,10 +20,10 @@ class THeap : public Traits::Abstract
 public:
 
     THeap(const std::size_t size) :
-        _memory{reinterpret_cast<Type*>(new TypeStorage[size])}
+        _memory{new TypeStorage[size]}
     {
-        _head = _memory;
-        _tail = _memory + size;
+        _head = reinterpret_cast<Type*>(_memory);
+        _tail = reinterpret_cast<Type*>(_memory) + size;
     }
 
     Type* allocate() override
@@ -38,7 +38,7 @@ public:
 
     void clean()
     {
-        auto temp = _memory;
+        auto temp = reinterpret_cast<Type*>(_memory);
 
         while (temp != _head)
         {
@@ -46,7 +46,7 @@ public:
             temp++;
         }
 
-        _head = _memory;
+        _head = reinterpret_cast<Type*>(_memory);
     }
 
     ~THeap()
@@ -57,10 +57,9 @@ public:
     }
 
 private:
-
-          Type* _head;
-    const Type* _tail;
-          Type* _memory;
+          Type        * _head;
+    const Type        * _tail;
+          TypeStorage * _memory;
 };
 
 namespace heap
