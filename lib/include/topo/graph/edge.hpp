@@ -80,13 +80,6 @@ public:
         _dependeeNode->_dependers.erase(_dependeeEdge);
     }
 
-    void detach(EdgeList& edges)
-    {
-        edges.erase(*_dependerEdge);
-
-        detach();
-    }
-
 private:
 
     NodeListIt _dependerNode;

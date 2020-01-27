@@ -47,6 +47,11 @@ public:
     EdgeListIt attach(NodeListIt& lhs,
                       NodeListIt& rhs)
     {
+        if (lhs->_dependees.empty())
+        {
+            topo_details::list::steal(_blockeds, _pendings, lhs);
+        }
+
         _edges.emplace_front(lhs, rhs);
 
         auto&& edgeIt = _edges.begin();
@@ -55,8 +60,6 @@ public:
         rhs->_dependers.emplace_front(edgeIt);
 
         edgeIt->update();
-
-        topo_details::list::steal(_blockeds, _pendings, lhs);
 
         return edgeIt;
     }
@@ -114,12 +117,7 @@ public:
     {
         for (auto&& depender : nodeIt->_dependers)
         {
-            (*(depender->_dependerEdge))->detach(_edges);
-
-            if (depender->_dependerNode->_dependees.empty())
-            {
-                topo_details::list::steal(_pendings, _blockeds, depender->_dependerNode);
-            }
+            detach(*(depender->_dependerEdge));
         }
     }
 
@@ -127,6 +125,13 @@ public:
     {
         auto&& nodeIt = top();
 
+        detachAll(nodeIt);
+
+        _pendings.erase(nodeIt);
+    }
+
+    void pop(NodeListIt& nodeIt)
+    {
         detachAll(nodeIt);
 
         _pendings.erase(nodeIt);

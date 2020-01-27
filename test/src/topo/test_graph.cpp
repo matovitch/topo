@@ -63,10 +63,38 @@ TEST_CASE("topo::graph")
 
     CHECK(cycle);
 
-    const char* ptr = "ACB";
+    const char* ptr = "CBA";
 
     for (const auto& nodeIt : *(cycle))
     {
         CHECK(nodeIt->value == *ptr++);
     }
+}
+
+TEST_CASE("topo::graph")
+{
+    CharPoolSet charPoolSet;
+
+    CharGraph charGraph{charPoolSet};
+
+    auto&& aAsNode = charGraph.makeNode('A');
+    auto&& bAsNode = charGraph.makeNode('B');
+    auto&& cAsNode = charGraph.makeNode('C');
+    auto&& dAsNode = charGraph.makeNode('D');
+
+    charGraph.attach(aAsNode, bAsNode);
+    charGraph.attach(bAsNode, cAsNode);
+    charGraph.attach(bAsNode, dAsNode);
+
+    charGraph.pop(cAsNode);
+
+    const char* ptr = "DBA";
+
+    while (!charGraph.empty())
+    {
+        CHECK(charGraph.top()->value == *ptr++);
+        charGraph.pop();
+    }
+
+    CHECK(!charGraph.isCyclic());
 }
