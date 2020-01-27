@@ -33,12 +33,12 @@ public:
 
     template <class... Args>
     TNode(EdgeListItPool& edgeListItPool, Args&&... args) :
-        value{args...},
+        _value{args...},
         _dependees{edgeListItPool},
         _dependers{edgeListItPool}
     {}
 
-    Type value;
+    Type _value;
 
 private:
 

@@ -29,7 +29,7 @@ TEST_CASE("topo::graph")
 
     while (!charGraph.empty())
     {
-        CHECK(charGraph.top()->value == *ptr++);
+        CHECK(charGraph.top()->_value == *ptr++);
         charGraph.pop();
     }
 
@@ -52,7 +52,7 @@ TEST_CASE("topo::graph")
     charGraph.attach(cAsNode, aAsNode);
     charGraph.attach(aAsNode, dAsNode);
 
-    CHECK(charGraph.top()->value == 'D');
+    CHECK(charGraph.top()->_value == 'D');
     charGraph.pop();
 
     CHECK(charGraph.empty());
@@ -67,7 +67,7 @@ TEST_CASE("topo::graph")
 
     for (const auto& nodeIt : *(cycle))
     {
-        CHECK(nodeIt->value == *ptr++);
+        CHECK(nodeIt->_value == *ptr++);
     }
 }
 
@@ -92,7 +92,7 @@ TEST_CASE("topo::graph")
 
     while (!charGraph.empty())
     {
-        CHECK(charGraph.top()->value == *ptr++);
+        CHECK(charGraph.top()->_value == *ptr++);
         charGraph.pop();
     }
 

@@ -44,8 +44,8 @@ public:
     }
 
     // lhs depends upon rhs
-    EdgeListIt attach(NodeListIt& lhs,
-                      NodeListIt& rhs)
+    EdgeListIt attach(NodeListIt lhs,
+                      NodeListIt rhs)
     {
         if (lhs->_dependees.empty())
         {
@@ -64,7 +64,7 @@ public:
         return edgeIt;
     }
 
-    void detach(EdgeListIt& edgeIt)
+    void detach(EdgeListIt edgeIt)
     {
         edgeIt->detach();
 
@@ -113,7 +113,7 @@ public:
         return _pendings.begin();
     }
 
-    void detachAll(NodeListIt& nodeIt)
+    void detachAll(NodeListIt nodeIt)
     {
         for (auto&& depender : nodeIt->_dependers)
         {
@@ -121,20 +121,16 @@ public:
         }
     }
 
-    void pop()
+    void pop(NodeListIt nodeIt)
     {
-        auto&& nodeIt = top();
-
         detachAll(nodeIt);
 
         _pendings.erase(nodeIt);
     }
 
-    void pop(NodeListIt& nodeIt)
+    void pop()
     {
-        detachAll(nodeIt);
-
-        _pendings.erase(nodeIt);
+        pop(top());
     }
 
 private:
