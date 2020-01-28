@@ -30,7 +30,7 @@ TEST_CASE("topo::graph")
     while (!charGraph.empty())
     {
         CHECK(charGraph.top()->_value == *ptr++);
-        charGraph.pop();
+        charGraph.pop(charGraph.top());
     }
 
     CHECK(!charGraph.isCyclic());
@@ -53,7 +53,7 @@ TEST_CASE("topo::graph")
     charGraph.attach(aAsNode, dAsNode);
 
     CHECK(charGraph.top()->_value == 'D');
-    charGraph.pop();
+    charGraph.pop(charGraph.top());
 
     CHECK(charGraph.empty());
 
@@ -93,7 +93,7 @@ TEST_CASE("topo::graph")
     while (!charGraph.empty())
     {
         CHECK(charGraph.top()->_value == *ptr++);
-        charGraph.pop();
+        charGraph.pop(charGraph.top());
     }
 
     CHECK(!charGraph.isCyclic());

@@ -62,8 +62,8 @@ class TEdge
 
 public:
 
-    TEdge(const NodeListIt& lhs,
-          const NodeListIt& rhs) :
+    TEdge(const NodeListIt lhs,
+          const NodeListIt rhs) :
         _dependerNode{lhs},
         _dependeeNode{rhs}
     {}

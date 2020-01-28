@@ -128,11 +128,6 @@ public:
         _pendings.erase(nodeIt);
     }
 
-    void pop()
-    {
-        pop(top());
-    }
-
 private:
 
     EdgeList _edges;
