@@ -48,7 +48,7 @@ public:
             return chunk().push(args...);
         }
 
-        const std::size_t size = chunk().size() << 1;
+        const std::size_t size = chunk().size() ? chunk().size() << 1 : 1;
         auto ptr = new std::aligned_storage_t<sizeof(Type), alignof(Type)>[size];
         _chunks.emplace_back(std::make_unique<Chunk>(reinterpret_cast<Type*>(ptr), size));
         _chunkIt = std::prev(_chunks.end());

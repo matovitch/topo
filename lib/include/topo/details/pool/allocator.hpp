@@ -51,7 +51,7 @@ public:
             return ptr;
         }
 
-        _heapBuffers.push(_size <<= 1);
+        _heapBuffers.push(_size ? _size <<= 1 : 1);
         _bufferPtr = &(_heapBuffers.top());
 
         return _bufferPtr->allocate();
