@@ -47,7 +47,7 @@ public:
     EdgeListIt attach(NodeListIt lhs,
                       NodeListIt rhs)
     {
-        if (lhs->_dependees.empty())
+        if (lhs->isPending())
         {
             topo_details::list::steal(_blockeds, _pendings, lhs);
         }
@@ -68,7 +68,7 @@ public:
     {
         edgeIt->detach();
 
-        if (edgeIt->_dependerNode->_dependees.empty())
+        if (edgeIt->_dependerNode->isPending())
         {
             topo_details::list::steal(_pendings, _blockeds, edgeIt->_dependerNode);
         }

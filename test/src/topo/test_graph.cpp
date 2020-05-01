@@ -9,7 +9,7 @@ using CharGraph   = topo::graph::TMake<char, 4>;
 using CharPoolSet = typename CharGraph::PoolSet;
 
 
-TEST_CASE("topo::graph")
+TEST_CASE("topo::graph_1")
 {
     CharPoolSet charPoolSet;
 
@@ -36,7 +36,7 @@ TEST_CASE("topo::graph")
     CHECK(!charGraph.isCyclic());
 }
 
-TEST_CASE("topo::graph")
+TEST_CASE("topo::graph_2")
 {
     CharPoolSet charPoolSet;
 
@@ -71,7 +71,7 @@ TEST_CASE("topo::graph")
     }
 }
 
-TEST_CASE("topo::graph")
+TEST_CASE("topo::graph_3")
 {
     CharPoolSet charPoolSet;
 
@@ -89,6 +89,31 @@ TEST_CASE("topo::graph")
     charGraph.pop(cAsNode);
 
     const char* ptr = "DBA";
+
+    while (!charGraph.empty())
+    {
+        CHECK(charGraph.top()->_value == *ptr++);
+        charGraph.pop(charGraph.top());
+    }
+
+    CHECK(!charGraph.isCyclic());
+}
+
+TEST_CASE("topo::graph_4")
+{
+    CharPoolSet charPoolSet;
+
+    CharGraph charGraph{charPoolSet};
+
+    auto&& aAsNode = charGraph.makeNode('A');
+    auto&& bAsNode = charGraph.makeNode('B');
+
+    charGraph.attach(bAsNode, bAsNode);
+    charGraph.attach(aAsNode, bAsNode);
+
+    charGraph.pop(bAsNode);
+
+    const char* ptr = "A";
 
     while (!charGraph.empty())
     {

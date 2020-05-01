@@ -31,15 +31,14 @@ RUN set -ex                                                                     
     apt-get update                                                                                              &&\
     apt-get install -y $TO_INSTALL                                                                              &&\
     apt-get update                                                                                              &&\
-    curl http://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -                                              &&\
     llvm_version=$(                                                                                               \
-        curl http://apt.llvm.org/unstable/dists/ 2> /dev/null | grep llvm                                         \
-                                                              | tail -n 1                                         \
-                                                              | grep -Eo 'llvm-toolchain-[0-9.]*'                 \
-                                                              | head -n 1                                         \
-                                                              | rev                                               \
-                                                              | cut -d '-' -f 1                                   \
-                                                              | rev                                           ) &&\
+        curl --compressed https://apt.llvm.org/unstable/dists/ 2> /dev/null | grep llvm                           \
+                                                                            | tail -n 1                           \
+                                                                            | grep -Eo 'llvm-toolchain-[0-9.]*'   \
+                                                                            | head -n 1                           \
+                                                                            | rev                                 \
+                                                                            | cut -d '-' -f 1                     \
+                                                                            | rev                             ) &&\
     apt-add-repository "deb http://apt.llvm.org/unstable/ llvm-toolchain-$llvm_version main"                    &&\
     apt-get install -y                                                                                            \
         libllvm$llvm_version                                                                                      \

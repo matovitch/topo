@@ -38,6 +38,11 @@ public:
         _dependers{edgeListItPool}
     {}
 
+    bool isPending() const
+    {
+        return _dependees.empty();
+    }
+
     Type _value;
 
 private:
